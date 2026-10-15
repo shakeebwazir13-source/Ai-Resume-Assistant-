@@ -1,0 +1,63 @@
+# 📄 ATS Resume Analyzer
+
+A Streamlit app that scores a resume for Applicant Tracking Systems (ATS) and tells you exactly how to improve it, powered by Google's Gemini Flash model.
+
+## Features
+- Upload a resume as **PDF, DOCX or TXT**
+- **ATS score (0-100)** with a breakdown: keywords, formatting, experience, education, impact, readability
+- Optional **job description** box for a job-match score and tailored missing keywords
+- Prioritised improvements (High / Medium / Low), strengths and weaknesses
+- Suggested bullet-point rewrites
+- Instant rule-based checks (email, phone, headings, length, bullets, metrics)
+- Download the report as Markdown
+
+## Tech stack
+Python, Streamlit, Google Gemini API (`google-genai`), pypdf, python-docx
+
+## Run locally (Windows + VS Code)
+1. Install Python 3.10+ and open this folder in VS Code.
+2. Open the VS Code terminal (Terminal → New Terminal) and run:
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+   If activation is blocked, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then try again.
+3. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey).
+4. Create the file `.streamlit/secrets.toml` and add:
+   ```toml
+   GEMINI_API_KEY = "your-key-here"
+   ```
+   (Or skip this and paste the key into the app's sidebar.)
+5. Start the app:
+   ```powershell
+   streamlit run app.py
+   ```
+
+## Configuration
+| Setting | Where | Default |
+|---|---|---|
+| `GEMINI_API_KEY` | secrets.toml / Streamlit Cloud secrets / env var | none (required) |
+| `GEMINI_MODEL` | same as above | `gemini-flash-latest` |
+
+If you get a "model not found" error, set `GEMINI_MODEL` to a current Flash model listed at https://ai.google.dev/gemini-api/docs/models.
+
+## Deploy on Streamlit Community Cloud
+1. Push this repo to GitHub (never commit `secrets.toml`; `.gitignore` already excludes it).
+2. Go to https://share.streamlit.io, sign in with GitHub and click **Create app**.
+3. Pick your repo, branch `main` and main file `app.py`.
+4. Open **Advanced settings → Secrets** and paste: `GEMINI_API_KEY = "your-key-here"`
+5. Click **Deploy**.
+
+## Notes
+- Scanned or image-only PDFs can't be read (an ATS can't read them either). Use a text-based PDF or DOCX.
+- The score is an AI estimate, not the output of a real employer ATS. Use it as guidance.
+- Resumes are sent to the Gemini API for analysis. Don't upload anything you aren't comfortable sharing.
+- If you put your own key in Streamlit secrets on a public app, everyone using it shares your free quota.
+
+## Project structure
+```
+app.py            # the Streamlit app
+requirements.txt  # dependencies
+README.md
+```
